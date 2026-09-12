@@ -27,16 +27,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.metrocam.app.camera.CameraController
 import com.metrocam.app.camera.CaptureMode
 import com.metrocam.app.camera.ManualControlState
 import com.metrocam.app.processing.HdrProcessor
 import com.metrocam.app.processing.NightModeProcessor
+import com.metrocam.app.ui.theme.MetroLime
 import com.metrocam.app.util.MediaStoreSaver
 import kotlinx.coroutines.launch
 
@@ -58,7 +62,7 @@ fun CameraScreen() {
         onDispose { cameraController.shutdown() }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
@@ -75,19 +79,34 @@ fun CameraScreen() {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.4f)),
+                    .background(Color.Black.copy(alpha = 0.5f)),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color.White)
+                CircularProgressIndicator(color = MetroLime)
             }
         }
 
+        // Pivot-style header: small ALL CAPS app title + large lowercase mode pivot,
+        // over a dark scrim so it stays legible against the live preview underneath.
         Column(
             modifier = Modifier
-                .align(Alignment.TopCenter)
+                .align(Alignment.TopStart)
                 .fillMaxWidth()
-                .padding(top = 32.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Black.copy(alpha = 0.65f), Color.Transparent)
+                    )
+                )
+                .padding(top = 28.dp, bottom = 16.dp)
         ) {
+            Text(
+                text = "METROCAM",
+                color = MetroLime,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 13.sp,
+                letterSpacing = 1.5.sp,
+                modifier = Modifier.padding(start = 20.dp, bottom = 6.dp)
+            )
             ModeSelector(selected = mode, onSelect = { mode = it })
         }
 
@@ -114,7 +133,10 @@ fun CameraScreen() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextButton(onClick = { showManualControls = !showManualControls }) {
-                Text(if (showManualControls) "Auto" else "Manual", color = Color.White)
+                Text(
+                    text = if (showManualControls) "auto" else "manual",
+                    color = Color.White
+                )
             }
 
             ShutterButton(enabled = !isProcessing) {
@@ -134,7 +156,7 @@ fun CameraScreen() {
                             }
                         }
                         MediaStoreSaver.saveJpeg(context, result)
-                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Photo saved", Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
                         Toast.makeText(context, "Capture failed: ${e.message}", Toast.LENGTH_LONG).show()
                     } finally {
@@ -153,7 +175,10 @@ private fun ShutterButton(enabled: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(72.dp)
-            .background(if (enabled) Color.White else Color.Gray, CircleShape)
+            .background(
+                if (enabled) MetroLime else MetroLime.copy(alpha = 0.35f),
+                CircleShape
+            )
             .clickable(enabled = enabled, onClick = onClick)
     )
 }

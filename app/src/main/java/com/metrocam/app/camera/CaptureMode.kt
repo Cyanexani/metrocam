@@ -1,7 +1,9 @@
 package com.metrocam.app.camera
 
+// Windows Phone pivot titles are lowercase; acronyms (like "HDR", "JPG") are a
+// documented exception and stay uppercase.
 enum class CaptureMode(val label: String) {
-    PHOTO("Photo"),
+    PHOTO("photo"),
     HDR("HDR"),
-    NIGHT("Night"),
+    NIGHT("night"),
 }

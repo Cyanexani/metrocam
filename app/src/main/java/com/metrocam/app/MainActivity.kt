@@ -9,7 +9,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,10 +25,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.metrocam.app.ui.CameraScreen
+import com.metrocam.app.ui.theme.MetroLime
 import com.metrocam.app.ui.theme.MetrocamTheme
 
 class MainActivity : ComponentActivity() {
@@ -77,7 +84,19 @@ private fun PermissionGate(content: @Composable () -> Unit) {
         content()
     } else {
         Box(modifier = Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-            Text("metrocam needs camera access to continue.")
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "METROCAM",
+                    color = MetroLime,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 13.sp,
+                    letterSpacing = 1.5.sp
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                // Neutral, non-personified system-message style: state the fact,
+                // don't speak as if the app itself "needs" something.
+                Text("Camera access is required.", color = Color.White)
+            }
         }
     }
 }

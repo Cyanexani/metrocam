@@ -2,5 +2,7 @@ package com.metrocam.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val ShutterYellow = Color(0xFFFFC107)
-val SurfaceBlack = Color(0xFF0B0B0F)
+// Classic Windows Phone "Lime" - the default Metro accent color.
+val MetroLime = Color(0xFFA4C400)
+val MetroBlack = Color(0xFF000000)
+val MetroPanel = Color(0xFF141414)
