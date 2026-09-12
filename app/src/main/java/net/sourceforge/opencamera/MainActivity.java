@@ -810,6 +810,11 @@ public class MainActivity extends AppCompatActivity implements PreferenceFragmen
                 boolean is_google = Build.MANUFACTURER.toLowerCase(Locale.US).contains("google");
                 boolean is_nokia = Build.MANUFACTURER.toLowerCase(Locale.US).contains("hmd global");
                 boolean is_oneplus = Build.MANUFACTURER.toLowerCase(Locale.US).contains("oneplus");
+                // "Nothing" phones (Phone (1)/(2)/(2a)/(3a)/(3a) Pro etc.) all ship on Android 12+
+                // with reliable Camera2 support, but without this they default to the legacy
+                // Camera API, which on these devices only exposes the main rear + front camera -
+                // the ultrawide/telephoto lenses only show up via Camera2's getCameraIdList().
+                boolean is_nothing = Build.MANUFACTURER.toLowerCase(Locale.US).contains("nothing");
                 if( is_google && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
                     default_to_camera2 = true;
                 else if( is_nokia && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P )
@@ -817,6 +822,8 @@ public class MainActivity extends AppCompatActivity implements PreferenceFragmen
                 else if( is_samsung && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
                     default_to_camera2 = true;
                 else if( is_oneplus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE )
+                    default_to_camera2 = true;
+                else if( is_nothing && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
                     default_to_camera2 = true;
 
                 if( default_to_camera2 ) {
