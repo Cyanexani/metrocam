@@ -810,11 +810,6 @@ public class MainActivity extends AppCompatActivity implements PreferenceFragmen
                 boolean is_google = Build.MANUFACTURER.toLowerCase(Locale.US).contains("google");
                 boolean is_nokia = Build.MANUFACTURER.toLowerCase(Locale.US).contains("hmd global");
                 boolean is_oneplus = Build.MANUFACTURER.toLowerCase(Locale.US).contains("oneplus");
-                // "Nothing" phones (Phone (1)/(2)/(2a)/(3a)/(3a) Pro etc.) all ship on Android 12+
-                // with reliable Camera2 support, but without this they default to the legacy
-                // Camera API, which on these devices only exposes the main rear + front camera -
-                // the ultrawide/telephoto lenses only show up via Camera2's getCameraIdList().
-                boolean is_nothing = Build.MANUFACTURER.toLowerCase(Locale.US).contains("nothing");
                 if( is_google && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
                     default_to_camera2 = true;
                 else if( is_nokia && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P )
@@ -823,8 +818,22 @@ public class MainActivity extends AppCompatActivity implements PreferenceFragmen
                     default_to_camera2 = true;
                 else if( is_oneplus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE )
                     default_to_camera2 = true;
-                else if( is_nothing && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
+                else if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ) {
+                    // Generic fallback for every other manufacturer (Nothing, Xiaomi, Motorola,
+                    // Sony, ASUS, Realme, ...). Upstream Open Camera only auto-enabled Camera2 for
+                    // a hardcoded manufacturer allowlist, opted in one vendor at a time as bug
+                    // reports came in - which means every device from an unlisted manufacturer
+                    // silently stayed on the legacy Camera1 API, which on virtually all modern
+                    // multi-lens phones only exposes the main rear + front camera (ultrawide/
+                    // telephoto/macro lenses only show up via Camera2's getCameraIdList()).
+                    // We already know every camera on this device reports at least LIMITED
+                    // Camera2 support (all_supports_camera2, above) and Camera2 drivers have been
+                    // near-universally solid since Android 12, so default to Camera2 across the
+                    // board instead of waiting to special-case each vendor individually. Anyone
+                    // who does hit a bad driver can still switch back in Settings > Camera
+                    // controls (more) > Camera API.
                     default_to_camera2 = true;
+                }
 
                 if( default_to_camera2 ) {
                     if( MyDebug.LOG )
