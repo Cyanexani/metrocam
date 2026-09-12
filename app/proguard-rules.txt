@@ -1,0 +1,3 @@
+# Referenced by app/build.gradle but not currently used - minifyEnabled is false for
+# release builds. Kept here (upstream's build.gradle references it but never committed
+# it) so the path resolves once minification is turned on.

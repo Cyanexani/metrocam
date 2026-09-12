@@ -5,7 +5,7 @@ android {
     compileOptions.encoding = 'UTF-8'
 
     defaultConfig {
-        applicationId "net.sourceforge.opencamera"
+        applicationId "com.metrocam.app"
         minSdkVersion 23
         targetSdkVersion 36
         //compileSdkVersion 31 // needed to support appcompat:1.4.0 (which we need for emoji policy support, and not yet ready to target SDK 30)
@@ -15,9 +15,27 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Release signing comes from environment variables (set from GitHub Actions secrets
+    // in CI - see .github/workflows/build.yml). Without them set, release builds are
+    // simply left unsigned rather than failing.
+    def releaseKeystorePath = System.getenv("METROCAM_KEYSTORE_PATH")
+    if (releaseKeystorePath != null) {
+        signingConfigs {
+            release {
+                storeFile file(releaseKeystorePath)
+                storePassword System.getenv("METROCAM_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("METROCAM_KEY_ALIAS")
+                keyPassword System.getenv("METROCAM_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            if (releaseKeystorePath != null) {
+                signingConfig signingConfigs.release
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
         }
     }
