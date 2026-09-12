@@ -15,6 +15,7 @@
     android:visibility="visible"
     android:gravity="center"
     android:textColor="#ffffffff"
-    android:background="#ff212121"
+    android:background="@color/popup_background"
+    android:fontFamily="@font/notosans_light"
     tools:ignore="Overdraw"
     />

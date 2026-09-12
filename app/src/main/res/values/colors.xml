@@ -8,4 +8,7 @@
     <color name="shutter_icon_pressed">#BFE036</color>
     <color name="shutter_icon_video_recording">#F44336</color>
     <color name="scrollview">#999999</color>
+    <!-- True black, matching the rest of the Metro theme (was #ff212121, AppCompat's
+         default dark grey) - used for the popup menu row background. -->
+    <color name="popup_background">#ff000000</color>
 </resources>

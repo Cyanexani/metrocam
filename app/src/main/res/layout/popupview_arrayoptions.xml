@@ -21,6 +21,8 @@
         android:visibility="visible"
         android:gravity="center"
         android:textColor="#ffffffff"
+        android:background="@color/popup_background"
+        android:fontFamily="@font/notosans_light"
         />
     <Button
         android:id="@+id/button_right"

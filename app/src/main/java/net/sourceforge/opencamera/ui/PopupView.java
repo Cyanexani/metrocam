@@ -1714,7 +1714,10 @@ public class PopupView extends LinearLayout {
 
             button.setId(count);
 
-            button.setText(supported_option_entry);
+            // Windows Phone style: list items/list pickers are shown lowercase. Only the on-
+            // screen display is affected - supported_option_entry itself (used for matching,
+            // logging, and the status toast below) keeps its original casing.
+            button.setText(supported_option_entry.toLowerCase(java.util.Locale.getDefault()));
             button.setTextSize(TypedValue.COMPLEX_UNIT_SP, standard_text_size_dip);
             button.setTextColor(Color.WHITE);
             if( MyDebug.LOG )
@@ -1773,10 +1776,13 @@ public class PopupView extends LinearLayout {
     }
 
     private void setArrayOptionsText(List<String> supported_options, String title, TextView textView, boolean title_in_options, boolean title_in_options_first_only, int current_index) {
+        // Windows Phone style: list items/list pickers are lowercase; the title/field label
+        // itself stays as-is (it isn't a selectable item).
+        String option_text = supported_options.get(current_index).toLowerCase(java.util.Locale.getDefault());
         if( title_in_options && !( current_index != 0 && title_in_options_first_only ) )
-            textView.setText(title + ": " + supported_options.get(current_index));
+            textView.setText(title + ": " + option_text);
         else
-            textView.setText(supported_options.get(current_index));
+            textView.setText(option_text);
     }
 
     /** Adds a set of options to the popup menu, where there user can select one option out of an array of values, using previous or

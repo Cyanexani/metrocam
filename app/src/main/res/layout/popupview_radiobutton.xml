@@ -8,4 +8,5 @@
     android:id="@+id/popupview_radiobutton"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:fontFamily="@font/notosans_light"
     />
